@@ -44,10 +44,8 @@ confd -onetime -backend env -log-level error
 stellar_core_init_db
 
 #attempt to new any history archives that have not yet been newed.
-echo "$HISTORY" | jq -r 'keys[]' | while read archive_name; do
-    if echo "$archive_name" | jq -e 'has("put")'; then
-        stellar_core_newhist $archive_name
-    fi
+echo "$HISTORY" | jq -r 'to_entries[] | select(.value | has("put")) | .key' | while read archive_name; do
+    stellar_core_newhist $archive_name
 done
 
 exec "$@"
