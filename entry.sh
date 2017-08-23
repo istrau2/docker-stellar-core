@@ -5,18 +5,20 @@ DB_INITIALIZED="/data/.db-initialized"
 set -ue
 
 function stellar_core_newhist() {
-	if [ -f "/data/.newhist-${1}" ]; then
-		echo "history archive named $1 is already newed up."
-		return 0
+    archive_name=$1
+
+	if [ -f "/data/.newhist-$archive_name" ]; then
+		echo "history archive named $archive_name is already newed up.";
+		return 0;
 	fi
 
-	echo "newing up history archive: $1..."
+	echo "newing up history archive: $archive_name...";
 
-	stellar-core --newhist $1
+	stellar-core --newhist $archive_name;
 
-	echo "newing up history archive: $1"
+	echo "newing up history archive: $archive_name";
 
-	touch "/data/.newhist-${1}"
+	touch "/data/.newhist-$archive_name";
 }
 
 function stellar_core_init_db() {
