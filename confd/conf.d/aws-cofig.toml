@@ -1,4 +1,0 @@
-[template]
-src = "aws-config.tmpl"
-dest = "~/.aws/config"
-mode = "0644"

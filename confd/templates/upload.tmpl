@@ -1,0 +1,14 @@
+#!/bin/bash
+{{if (getenv "AWS_ACCESS_KEY_ID")}}
+export AWS_ACCESS_KEY_ID={{getenv "AWS_ACCESS_KEY_ID"}}
+{{end}}
+
+{{if (getenv "AWS_SECRET_ACCESS_KEY")}}
+export AWS_SECRET_ACCESS_KEY={{getenv "AWS_SECRET_ACCESS_KEY"}}
+{{end}}
+
+{{if (getenv "AWS_DEFAULT_REGION")}}
+export AWS_DEFAULT_REGION={{getenv "AWS_DEFAULT_REGION"}}
+{{end}}
+
+aws s3 cp $1 s3://{{getenv "AWS_BUCKET_NAME"}}/$2

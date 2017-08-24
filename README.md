@@ -74,7 +74,7 @@ To use aws as archive destination, add a history destination of the following fo
      }
    }
 ```
-In order for this to work you must include an AWS section in your config with a mimimum of aws_access_key_id and aws_secret_access_key.
+Additionally, you must specify at least an AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY and AWS_BUCKET_NAME in your docker-compose.yml
 
 
 ### Sample Output
@@ -106,6 +106,10 @@ services:
       - UNSAFE_QUORUM=true
       - FAILURE_SAFETY=1
       - CATCHUP_RECENT=60480
+      - AWS_ACCESS_KEY_ID=xxx
+      - AWS_SECRET_ACCESS_KEY=xxx
+      - AWS_DEFAULT_REGION=xxx
+      - AWS_BUCKET_NAME=xxx
       - >-
           NODE_NAMES=
           GDKXE2OZMJIPOSLNA6N6F2BVCI3O777I2OOC4BV7VOYUEHYX7RTRYA7Y sdf1,
@@ -125,15 +129,9 @@ services:
             "h3": {"get": "curl -sf http://s3-eu-west-1.amazonaws.com/history.stellar.org/prd/core-testnet/core_testnet_003/{0} -o {1}"},
             "archive": {
               "get": "curl http://lupoex-stellar-archive.s3.amazonaws.com/{0} -o {1}",
-              "put": "aws s3 cp {0} s3://lupoex-stellar-archive/{1}"
+              #this put command must look like this. The script will take care of the upload using whatever environment variables you provide.
+              "put": "/bin/bash /upload.sh {0} {1}"
             }
-          }
-      - >-
-          AWS={
-            "aws_access_key_id": "xxx",
-            "aws_secret_access_key": "xxx",
-            "region": "us-east-2",
-            "ouput": "json"
           }
   postgres-horizon:
     image: postgres:9
