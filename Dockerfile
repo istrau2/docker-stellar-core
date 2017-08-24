@@ -12,8 +12,6 @@ LABEL maintainer="yishaistrauss@gmail.com"
 ADD install.sh /
 RUN /install.sh
 
-RUN mkdir ~/.aws
-
 VOLUME /data
 
 # peer port

@@ -5,7 +5,7 @@ DB_INITIALIZED="/data/.db-initialized"
 set -ue
 
 function stellar_core_newhist() {
-    local $ARCHIVE_NAME=$1
+    local ARCHIVE_NAME=$1
     local ARCHIVE_INITIALIZED="/data/.newhist-$ARCHIVE_NAME"
 
 	if [ -f $ARCHIVE_INITIALIZED ]; then
