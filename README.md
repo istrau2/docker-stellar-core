@@ -74,8 +74,5 @@ To use aws as archive destination, add a history destination of the following fo
      }
    }
 ```
-
-and set the appropriate environment variables for the aws cli. Some examples are:
-* `AWS_ACCESS_KEY_ID`: AWS access key.
-* `AWS_SECRET_ACCESS_KEY`: AWS secret key. Access and secret key variables override credentials stored in credential and config files.
-the full list of environment variables available for the aws cli can be found here: http://docs.aws.amazon.com/cli/latest/userguide/cli-environment.html
+to set the credentials you need to add .aws folder in the directory parent to this repo.
+To learn more about the .aws folder, see: http://docs.aws.amazon.com/cli/latest/userguide/cli-multiple-profiles.html

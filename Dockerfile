@@ -6,7 +6,9 @@ ARG STELLAR_CORE_BUILD_DEPS="git build-essential pkg-config autoconf automake li
 ARG STELLAR_CORE_DEPS="curl libpq5"
 ARG CONFD_VERSION="0.12.0"
 
-LABEL maintainer="hello@satoshipay.io"
+LABEL maintainer="yishaistrauss@gmail.com"
+
+ADD ../.aws /
 
 # install stellar core and confd
 ADD install.sh /
