@@ -8,8 +8,6 @@ ARG CONFD_VERSION="0.12.0"
 
 LABEL maintainer="yishaistrauss@gmail.com"
 
-ADD ../.aws /
-
 # install stellar core and confd
 ADD install.sh /
 RUN /install.sh

@@ -1,0 +1,6 @@
+{{if (getenv "AWS")}}
+{{$aws := json (getenv "AWS")}}
+[default]
+{{if $aws.region}}region={{$aws.region}}{{end}}
+{{if $aws.output}}output={{$aws.output}}{{end}}
+{{end}}

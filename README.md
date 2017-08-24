@@ -74,5 +74,86 @@ To use aws as archive destination, add a history destination of the following fo
      }
    }
 ```
-to set the credentials you need to add .aws folder in the directory parent to this repo.
-To learn more about the .aws folder, see: http://docs.aws.amazon.com/cli/latest/userguide/cli-multiple-profiles.html
+In order for this to work you must include an AWS section in your config with a mimimum of aws_access_key_id and aws_secret_access_key.
+
+
+### Sample Output
+```
+version: '3'
+services:
+  postgres-core:
+    image: postgres:9
+    volumes:
+      - "/var/stellar-data-testnet/postgres-core:/var/lib/postgresql/data"
+    environment:
+      - POSTGRES_DB=stellar-core
+  stellar-core:
+    image: stellar-core
+    restart: always
+    links:
+      - postgres-core
+    ports:
+      # peer port
+      - "11625:11625"
+    volumes:
+      - "/var/stellar-data-testnet/core:/data"
+    environment:
+      - DATABASE=postgresql://dbname=stellar-core user=postgres host=postgres-core
+      - NODE_SEED=XXXXX
+      - PUBLIC_SEED=XXXXX
+      - KNOWN_PEERS=core-testnet1.stellar.org,core-testnet2.stellar.org,core-testnet3.stellar.org
+      - NETWORK_PASSPHRASE=Test SDF Network ; September 2015
+      - UNSAFE_QUORUM=true
+      - FAILURE_SAFETY=1
+      - CATCHUP_RECENT=60480
+      - >-
+          NODE_NAMES=
+          GDKXE2OZMJIPOSLNA6N6F2BVCI3O777I2OOC4BV7VOYUEHYX7RTRYA7Y sdf1,
+          GCUCJTIYXSOXKBSNFGNFWW5MUQ54HKRPGJUTQFJ5RQXZXNOLNXYDHRAP sdf2,
+          GC2V2EFSXN6SQTWVYA5EPJPBWWIMSD2XQNKUOHGEKB535AQE2I6IXV2Z sdf3
+      - >-
+          QUORUM_SET=[
+            {
+              "threshold_percent": 51,
+              "validators":["$$sdf1","$$sdf2","$$sdf3"]
+            }
+          ]
+      - >-
+          HISTORY={
+            "h1": {"get": "curl -sf http://s3-eu-west-1.amazonaws.com/history.stellar.org/prd/core-testnet/core_testnet_001/{0} -o {1}"},
+            "h2": {"get": "curl -sf http://s3-eu-west-1.amazonaws.com/history.stellar.org/prd/core-testnet/core_testnet_002/{0} -o {1}"},
+            "h3": {"get": "curl -sf http://s3-eu-west-1.amazonaws.com/history.stellar.org/prd/core-testnet/core_testnet_003/{0} -o {1}"},
+            "archive": {
+              "get": "curl http://lupoex-stellar-archive.s3.amazonaws.com/{0} -o {1}",
+              "put": "aws s3 cp {0} s3://lupoex-stellar-archive/{1}"
+            }
+          }
+      - >-
+          AWS={
+            "aws_access_key_id": "xxx",
+            "aws_secret_access_key": "xxx",
+            "region": "us-east-2",
+            "ouput": "json"
+          }
+  postgres-horizon:
+    image: postgres:9
+    volumes:
+      - "/var/stellar-data-testnet/postgres-horizon:/var/lib/postgresql/data"
+    environment:
+      - POSTGRES_DB=stellar-horizon
+  stellar-horizon:
+    image: stellar-horizon
+    restart: always
+    links:
+      - stellar-core
+      - postgres-horizon
+      - postgres-core
+    ports:
+      # HTTP port
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgres://postgres@postgres-horizon/stellar-horizon?sslmode=disable
+      - STELLAR_CORE_DATABASE_URL=postgres://postgres@postgres-core/stellar-core?sslmode=disable
+      - STELLAR_CORE_URL=http://stellar-core:11626
+      - INGEST=true
+```
