@@ -100,7 +100,6 @@ services:
     environment:
       - DATABASE=postgresql://dbname=stellar-core user=postgres host=postgres-core
       - NODE_SEED=XXXXX
-      - PUBLIC_SEED=XXXXX
       - KNOWN_PEERS=core-testnet1.stellar.org,core-testnet2.stellar.org,core-testnet3.stellar.org
       - NETWORK_PASSPHRASE=Test SDF Network ; September 2015
       - UNSAFE_QUORUM=true
